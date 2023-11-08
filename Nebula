@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Define ASCII art in purple
+purple="\e[0;35m"
+alt="\e[0;36m"
+reset="\e[0m"
+
+ascii_art="${purple}
+
+    ███╗   ██╗███████╗██████╗ ██╗   ██╗██╗      █████╗
+    ████╗  ██║██╔════╝██╔══██╗██║   ██║██║     ██╔══██╗
+    ██╔██╗ ██║█████╗  ██████╔╝██║   ██║██║     ███████║
+    ██║╚██╗██║██╔══╝  ██╔══██╗██║   ██║██║     ██╔══██║
+    ██║ ╚████║███████╗██████╔╝╚██████╔╝███████╗██║  ██║
+    ╚═╝  ╚═══╝╚══════╝╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝
+    v1.0
+${reset}"
+
+# Function to display the main menu
+display_menu() {
+    clear
+    echo -e "$ascii_art"
+    echo -e "${alt}Current Working Directory: $(pwd)${reset}"
+    echo -e "What would you like to do today?\n"
+    echo "[0]: Exit"
+    echo "[1]: Install Syati"
+    echo -e ""
+}
+
+# Main menu loop
+while true; do
+    display_menu
+    read -p "=> " choice
+
+    case "$choice" in
+        0)
+            clear
+            exit
+            ;;
+        1)
+            clear
+            echo "Installing Syati..."
+            curl -sSL https://raw.githubusercontent.com/Unvortex/Scripts/main/Wii%20Modding/Arch-Syati-Install | bash
+            read -p "Press Enter to continue..."
+            ;;
+        *)
+            # Invalid choice, continue the loop
+            ;;
+    esac
+done
+
