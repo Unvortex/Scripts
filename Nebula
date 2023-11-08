@@ -35,7 +35,7 @@ while true; do
     case "$choice" in
         0)
             clear
-            exit
+            break
             ;;
         1)
             clear
@@ -47,5 +47,6 @@ while true; do
             # Invalid choice, continue the loop
             ;;
     esac
+    clear
 done
 
