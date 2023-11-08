@@ -36,11 +36,9 @@ while true; do
 
     case "$choice" in
         0)
-            clear
             exit
             ;;
         1)
-            clear
             echo "Installing Syati..."
             curl -sSL https://raw.githubusercontent.com/Unvortex/Scripts/main/Wii%20Modding/Arch-Syati-Install | bash
             read -p "Press Enter to continue..."
