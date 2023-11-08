@@ -1,0 +1,153 @@
+#!/bin/bash
+
+# Check if the script is called with an argument
+if [ "$#" -eq 0 ]; then
+    echo "Usage: $0 <argument>"
+    exit 1
+fi
+
+pacman_dppc_patch() {
+    # Import the devkitpro key
+    sudo pacman-key --recv BC26F752D25B92CE272E0F44F7FD5492264BB9D0 --keyserver keyserver.ubuntu.com
+    sudo pacman-key --lsign BC26F752D25B92CE272E0F44F7FD5492264BB9D0
+
+    # Download the devkitpro keyring
+    wget https://pkg.devkitpro.org/devkitpro-keyring.pkg.tar.xz
+
+    # Install the devkitPro keyring
+    sudo pacman -U devkitpro-keyring.pkg.tar.xz --noconfirm
+
+    rm devkitpro-keyring.pkg.tar.xz
+
+# Variable to track if an update is needed
+update_needed=false
+
+# Add the devkitPro repositories to /etc/pacman.conf if they're not already present
+if ! grep -q "\[dkp-libs\]" /etc/pacman.conf; then
+    echo -e "[dkp-libs]\nServer = https://pkg.devkitpro.org/packages" | sudo tee -a /etc/pacman.conf
+    update_needed=true
+fi
+
+if ! grep -q "\[dkp-linux\]" /etc/pacman.conf; then
+    echo -e "[dkp-linux]\nServer = https://pkg.devkitpro.org/packages/linux/\$arch/" | sudo tee -a /etc/pacman.conf
+    update_needed=true
+fi
+
+# Run sudo pacman -Syu --noconfirm if an update is needed
+if [ "$update_needed" = true ]; then
+    sudo pacman -Syu --noconfirm
+fi
+}
+
+extractCW() {
+    cabextract -F Data1.cab CW55xx_v2_10_SE.exe
+    cabextract -F lmgr11.dll Data1.cab
+    cabextract -F lmgr8c.dll Data1.cab
+    cabextract -F _44CD8EA541F44E56801091477F3DC9AA Data1.cab
+    mv _44CD8EA541F44E56801091477F3DC9AA license.dat
+    cabextract -F _4C8ADA37887647F5955B4FB0F716277F Data1.cab
+    mv _4C8ADA37887647F5955B4FB0F716277F mwcceppc.exe
+    cabextract -F _C63F22BC0503480DAFDCAFC394185CBA Data1.cab
+    mv _C63F22BC0503480DAFDCAFC394185CBA mwasmeppc.exe
+    cabextract -F _4901FAD667D24E13BCF700F695CDD6D7 Data1.cab
+    mv _4901FAD667D24E13BCF700F695CDD6D7 mwldeppc.exe
+    cabextract -F _112A80A88B6147C590AE2CD9AE3F354F Data1.cab
+    mv _112A80A88B6147C590AE2CD9AE3F354F mwcceppc.txt
+    cabextract -F _39217B1AFC714B7083E6CB5CBB10FC83 Data1.cab
+    mv _39217B1AFC714B7083E6CB5CBB10FC83 mwasmeppc.txt
+    cabextract -F _312B4591741B497CB5EB342A632170BE Data1.cab
+    mv _312B4591741B497CB5EB342A632170BE mwldeppc.txt
+    cabextract -F _87844F06D94541B3B62E7A69C029A35D Data1.cab
+    mv _87844F06D94541B3B62E7A69C029A35D CLT_EABI_PPC_Tools_Notes.txt
+    cabextract -F _6F672001C92D4DF8B1893652C3B19743 Data1.cab
+    mv _6F672001C92D4DF8B1893652C3B19743 CLT_Usage_Notes.txt
+    rm Data1.cab
+}
+
+# Get the argument provided
+argument="$1"
+
+# Use a case statement to handle the argument
+case "$argument" in
+    "arch")
+        echo "Installing 'arch'..."
+        wget -O cw.zip 'https://github.com/Newer-Team/NewerSMBW/archive/refs/heads/cw.zip'
+        echo "Repository 'cw.zip' has been downloaded to the current working directory."
+
+        # Unpack the ZIP file
+        unzip -q cw.zip
+        echo "Repository 'cw.zip' has been unpacked."
+        rm cw.zip
+        echo "Old ZIP file 'cw.zip' has been deleted."
+
+        # Check if Wine is installed
+        if wine --version &> /dev/null; then
+            echo "Wine is already installed."
+        else
+            echo "Wine is not installed. Attempting to install..."
+            # Install Wine using pacman for Arch-based systems
+            sudo pacman -Sy --noconfirm
+            sudo pacman -S wine --noconfirm
+        fi
+
+        # Delete the old ZIP file
+
+        pacman_dppc_patch
+
+        # List of packages to be installed
+packages_to_install=("wii-dev" "python-pyyaml" "python-pyelftools" "cabextract")
+
+# Variable to track if any package needs to be installed
+install_needed=false
+
+# Check if each package is installed, and set install_needed to true if any package is missing
+for package in "${packages_to_install[@]}"; do
+    if ! pacman -Q "$package" &> /dev/null; then
+        install_needed=true
+        break
+    fi
+done
+
+# Install the packages if needed
+if [ "$install_needed" = true ]; then
+    sudo pacman -S "${packages_to_install[@]}" --noconfirm
+fi
+
+        wget -O CW55xx_v2_10_SE.exe 'http://cache.nxp.com/lgfiles/devsuites/PowerPC/CW55xx_v2_10_SE.exe?WT_TYPE=IDE%20-%20Debug,%20Compile%20and%20Build%20Tools&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=exe&WT_ASSET=Downloads&fileExt=.exe'
+
+        mkdir NewerSMBW-cw/Kamek/tools/cw/
+        mv CW55xx_v2_10_SE.exe NewerSMBW-cw/Kamek/tools/cw/
+        cd NewerSMBW-cw/Kamek/tools/cw/
+        extractCW
+
+        echo "Installation process done, cleaning up..."
+        # Newer CW Root
+        chmod +x ../c++filt//linux/powerpc-eabi-c++filt
+        cd ../../..
+        rm extractCW.sh
+        echo '#!/bin/bash
+cd Kamek/
+while true; do
+    output=$(sudo ./makeNewer)
+    if [[ $output == *"Built all!"* ]]; then
+        echo "Build success!"
+        break
+    elif [[ $output == *"BUILD FAILED!"* ]]; then
+        echo "Build failed, trying again... (This can take a few tries)"
+    fi
+done
+sudo mv ./Build_NewerProject ../NewerProject
+' > build
+        chmod +x ./build
+        # Nebula Root
+        cd ..
+        mv NewerSMBW-cw NewerSMBW
+        sudo chmod -R 777 NewerSMBW/
+        ;;
+    "linux")
+        echo "You provided 'linux'."
+        ;;
+    *)
+        echo "You provided an unknown argument: '$argument'."
+        ;;
+esac
