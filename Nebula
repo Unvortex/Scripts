@@ -25,7 +25,6 @@ display_menu() {
 }
 
 # Clear the screen once at the beginning
-clear
 
 # Main menu loop
 while true; do
