@@ -6,7 +6,6 @@ alt="\e[0;36m"
 reset="\e[0m"
 
 ascii_art="${purple}
-
     ███╗   ██╗███████╗██████╗ ██╗   ██╗██╗      █████╗
     ████╗  ██║██╔════╝██╔══██╗██║   ██║██║     ██╔══██╗
     ██╔██╗ ██║█████╗  ██████╔╝██║   ██║██║     ███████║
@@ -18,7 +17,7 @@ ${reset}"
 
 # Function to display the main menu
 display_menu() {
-    clear
+    echo -e "\033[H\033[2J"  # Clear the screen
     echo -e "$ascii_art"
     echo -e "${alt}Current Working Directory: $(pwd)${reset}"
     echo -e "What would you like to do today?\n"
@@ -26,6 +25,9 @@ display_menu() {
     echo "[1]: Install Syati"
     echo -e ""
 }
+
+# Clear the screen once at the beginning
+clear
 
 # Main menu loop
 while true; do
@@ -48,4 +50,3 @@ while true; do
             ;;
     esac
 done
-
