@@ -17,10 +17,10 @@ display_menu() {
 }
 
 # Clear the screen once at the beginning
-
+display_menu
 # Main menu loop
 while true; do
-    display_menu
+    
     read -p "=> " choice
 
     case "$choice" in
