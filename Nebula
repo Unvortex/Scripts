@@ -23,7 +23,8 @@ display_menu() {
     echo -e "${alt}Current Working Directory: $(pwd)${reset}"
     echo -e "What would you like to do today?\n"
     echo "[0]: Exit"
-    echo "[1]: Install Syati"
+    echo "[1]: Install Syati + Dependencies (Arch)"
+    echo "[2]: Install NewerSMBW Source + Dependencies (Arch)"
     echo -e ""
 }
 
@@ -43,10 +44,18 @@ while true; do
             curl -sSL https://raw.githubusercontent.com/Unvortex/Scripts/main/Wii%20Modding/Arch-Syati-Install | bash
             read -p "Press Enter to continue..."
             ;;
+
+        2)
+            clear
+            echo "Installing NewerSMBW Source..."
+            curl -sSL https://raw.githubusercontent.com/Unvortex/Scripts/main/Wii%20Modding/Newer-Source-Download -o Newer-Source-Download.sh && chmod +x Newer-Source-Download.sh && bash Newer-Source-Download.sh arch && rm -f Newer-Source-Download.sh
+            read -p "Press Enter to continue"
+            ;;
         *)
             # Invalid choice, continue the loop
             ;;
     esac
     clear
 done
+
 
