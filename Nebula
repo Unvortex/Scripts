@@ -37,6 +37,7 @@ while true; do
         0)
             clear
             exit
+            echo -e "LOREMLOREMLOTREM\nLOREMLOREMLOREM\nLOREMLOREMLOREM\nLOREMLOREMLOREM\nLOREMLOREMLOREM\nLOREMLOREMLOREM\nLOREMLOREMLOREM\nLOREMLOREMLOREM\nLOREMLOREMLOREM\nLOREMLOREMLOREM"
             ;;
         1)
             clear
