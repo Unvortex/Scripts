@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Define ASCII art in purple
 purple="\e[0;35m"
 alt="\e[0;36m"
