@@ -10,7 +10,7 @@ rm Syati.zip
 echo "Unpacked, installing dependencies..."
 
 cd Syati-main/deps
-wget -O dependencies.zip 'https://cdn.discordapp.com/attachments/1171615183018397698/1171621813718110218/deps.zip?ex=655d58d8&is=654ae3d8&hm=4544d7ce840301bcf42ba5dc0a277b2d644e16a086fd29c044dc4ac7ca46289e&'
+wget -O dependencies.zip 'https://raw.githubusercontent.com/Unvortex/Scripts/main/Wii%20Modding/dependencies/syati_deps.zip'
 
 echo "Unpacking..."
 unzip -q dependencies.zip
